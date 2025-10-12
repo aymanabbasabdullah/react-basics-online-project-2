@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.9",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "uuidv4": "^6.2.13"
