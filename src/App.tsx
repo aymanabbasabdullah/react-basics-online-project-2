@@ -27,14 +27,14 @@ const App = () => {
   const openModal = () => setIsOpen(true);
 
   const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const [value, name] = event.target;
+    const { value, name } = event.target;
     setProduct({
       ...product,
       [name]: value,
     });
     console.log(event.target.value);
   };
-
+  console.log(product);
   /* --------- RENDER ----------- */
   // ** Render
   const renderProductList = productList.map((product) => (
@@ -43,7 +43,7 @@ const App = () => {
 
   const renderFormInputList = formInputsList.map((input, index) => {
     return (
-      <div className="flex flex-col">
+      <div className="flex flex-col" key={input.id}>
         <label
           htmlFor={input.name}
           className="mb-[2px] font-medium text-gray-700 "
@@ -56,8 +56,7 @@ const App = () => {
           id={input.id}
           autoFocus={index === 0}
           // Line Below In Wrong Fix IT
-          // value={product[""]}
-          value={""}
+          value={product[input.name]}
           onChange={onChangeHandler}
         ></Input>
       </div>
