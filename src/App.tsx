@@ -4,8 +4,38 @@ import Modal from "./components/ui/Modal";
 import { formInputsList, productList } from "./data";
 import Button from "./components/ui/Button";
 import Input from "./components/ui/Input";
+import type { IProduct } from "./interfaces";
 
 const App = () => {
+  /* --------- STATE ----------- */
+  const [product, setProduct] = useState<IProduct>({
+    title: "",
+    description: "",
+    imageURL: "",
+    price: "",
+    colors: [],
+    category: {
+      name: "",
+      imageURL: "",
+    },
+  });
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  /* --------- HANDLERS ----------- */
+  const closeModal = () => setIsOpen(false);
+  const openModal = () => setIsOpen(true);
+
+  const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const [value, name] = event.target;
+    setProduct({
+      ...product,
+      [name]: value,
+    });
+    console.log(event.target.value);
+  };
+
+  /* --------- RENDER ----------- */
   // ** Render
   const renderProductList = productList.map((product) => (
     <ProductCard key={product.id} product={product} />
@@ -25,23 +55,15 @@ const App = () => {
           type="text"
           id={input.id}
           autoFocus={index === 0}
+          // Line Below In Wrong Fix IT
+          // value={product[""]}
+          value={""}
+          onChange={onChangeHandler}
         ></Input>
       </div>
     );
   });
 
-  /* --------- STATE ----------- */
-  const [isOpen, setIsOpen] = useState(false);
-
-  /* --------- HANDLERS ----------- */
-  function closeModal() {
-    setIsOpen(false);
-  }
-
-  function openModal() {
-    setIsOpen(true);
-  }
-  /* --------- RENDER ----------- */
   return (
     <main className=" container px-4 ">
       <Button
