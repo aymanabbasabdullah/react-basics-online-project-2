@@ -5,20 +5,30 @@ import { formInputsList, productList } from "./data";
 import Button from "./components/ui/Button";
 import Input from "./components/ui/Input";
 import type { IProduct } from "./interfaces";
+import { productValidation } from "./validation";
+import ErrorMessage from "./components/ErrorMessage";
 
+const defaultProductObject = {
+  title: "",
+  description: "",
+  imageURL: "",
+  price: "",
+  colors: [],
+  category: {
+    name: "",
+    imageURL: "",
+  },
+};
 const App = () => {
   /* --------- STATE ----------- */
-  const [product, setProduct] = useState<IProduct>({
+  const [product, setProduct] = useState<IProduct>(defaultProductObject);
+  const [errors, setErrors] = useState({
     title: "",
     description: "",
     imageURL: "",
     price: "",
-    colors: [],
-    category: {
-      name: "",
-      imageURL: "",
-    },
   });
+  console.log("errors : ", errors);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -32,9 +42,38 @@ const App = () => {
       ...product,
       [name]: value,
     });
-    console.log(event.target.value);
+    setErrors({
+      ...errors,
+      [name]: "",
+    });
+    // console.log(event.target.value);
   };
-  console.log(product);
+  // console.log(product);
+
+  const onCancel = () => {
+    console.log("Cancel");
+    setProduct(defaultProductObject);
+    closeModal();
+  };
+
+  const submitHandler = (event: React.FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    const { title, description, imageURL, price } = product;
+    const errors = productValidation({ title, description, imageURL, price });
+    // ** Check if any property has a value of "" && Check if all properties have a value of ""
+    const hasErrorMsg =
+      Object.values(errors).some((value) => value === "") &&
+      Object.values(errors).every((value) => value === "");
+
+    if (!hasErrorMsg) {
+      setErrors(errors);
+      openModal();
+      return;
+    }
+    // console.log(hasErrorMsg);
+    console.log("Send This Product to server");
+  };
+
   /* --------- RENDER ----------- */
   // ** Render
   const renderProductList = productList.map((product) => (
@@ -58,7 +97,9 @@ const App = () => {
           // Line Below In Wrong Fix IT
           value={product[input.name]}
           onChange={onChangeHandler}
-        ></Input>
+        />
+
+        <ErrorMessage msg={errors[input.name]} />
       </div>
     );
   });
@@ -77,7 +118,7 @@ const App = () => {
       </div>
 
       <Modal isOpen={isOpen} closeModal={closeModal} title="ADD A NEW PRODUCT">
-        <form className="space-y-3">
+        <form className="space-y-3" onSubmit={submitHandler}>
           {renderFormInputList}
 
           <div className="flex items-center  space-x-3 mt-5 ">
@@ -89,7 +130,7 @@ const App = () => {
             </Button>
             <Button
               className="bg-gray-300 hover:bg-gray-400"
-              onClick={closeModal}
+              onClick={onCancel}
             >
               Cancel
             </Button>
