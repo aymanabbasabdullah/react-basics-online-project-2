@@ -1,9 +1,9 @@
 // ** productObj === errorsObj    (Title , Description , Image , Price)
 
 /**
- * 
- * @param product 
- * @returns 
+ *
+ * @param product
+ * @returns
  */
 export const productValidation = (product: {
   title: string;
@@ -12,6 +12,7 @@ export const productValidation = (product: {
   price: string;
 }) => {
   // ** Return an object
+  //   const errors: Partial<Record<keyof typeof product, string>> = {};
   const errors: {
     title: string;
     description: string;
@@ -24,7 +25,7 @@ export const productValidation = (product: {
     price: "",
   };
 
-  const validURL = /^(ftp|http|https):\/\/[^ "]+$/.test(product.imageURL);
+  const URL_PATTERN = /^(ftp|http|https):\/\/[^ "]+$/.test(product.imageURL);
   if (
     !product.title.trim() ||
     product.title.length < 10 ||
@@ -40,7 +41,7 @@ export const productValidation = (product: {
     errors.description =
       "Product description must be between 10 and 80 cahracters";
   }
-  if (!product.imageURL.trim() || !validURL) {
+  if (!product.imageURL.trim() || !URL_PATTERN) {
     errors.imageURL = "Vaild image URL is required!";
   }
   if (!product.price.trim() || isNaN(Number(product.price))) {

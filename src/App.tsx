@@ -1,12 +1,13 @@
 import { useState } from "react";
 import ProductCard from "./components/ProductCard";
 import Modal from "./components/ui/Modal";
-import { formInputsList, productList } from "./data";
+import { colors, formInputsList, productList } from "./data";
 import Button from "./components/ui/Button";
 import Input from "./components/ui/Input";
 import type { IProduct } from "./interfaces";
 import { productValidation } from "./validation";
 import ErrorMessage from "./components/ErrorMessage";
+import CricleColor from "./components/ui/CricleColor";
 
 const defaultProductObject = {
   title: "",
@@ -28,9 +29,11 @@ const App = () => {
     imageURL: "",
     price: "",
   });
-  console.log("errors : ", errors);
+  // console.log("errors : ", errors);
 
   const [isOpen, setIsOpen] = useState(false);
+  const [tempColros, setTempColor] = useState<string[]>([]);
+  console.log(tempColros);
 
   /* --------- HANDLERS ----------- */
   const closeModal = () => setIsOpen(false);
@@ -70,6 +73,7 @@ const App = () => {
       openModal();
       return;
     }
+
     // console.log(hasErrorMsg);
     console.log("Send This Product to server");
   };
@@ -104,6 +108,29 @@ const App = () => {
     );
   });
 
+  const renderProductColor = colors.map((color) => (
+    <CricleColor
+      key={color}
+      color={color}
+      onClick={() => {
+        console.log(color);
+
+        // if (tempColros.includes(color)) {
+        //   setTempColor((prev) => prev.filter((item) => item !== color));
+        //   return;
+        // }
+        // setTempColor((prev) => [...prev, color]);
+
+        //clean and “best-practice” 2 way
+        setTempColor((prev) => {
+          const exits = tempColros.includes(color);
+          return exits
+            ? prev.filter((item) => item !== color)
+            : [...prev, color];
+        });
+      }}
+    />
+  ));
   return (
     <main className=" container px-4 ">
       <Button
@@ -121,6 +148,20 @@ const App = () => {
         <form className="space-y-3" onSubmit={submitHandler}>
           {renderFormInputList}
 
+          <div className="flex items-center flex-wrap  space-x-1">
+            {tempColros.map((color) => (
+              <span
+                key={color}
+                className="p-1 rounded-md text-xs text-white mb-1 mr-1"
+                style={{ background: color }}
+              >
+                {color}
+              </span>
+            ))}
+          </div>
+          <div className="flex items-center flex-wrap  space-x-1">
+            {renderProductColor}
+          </div>
           <div className="flex items-center  space-x-3 mt-5 ">
             <Button
               className="bg-indigo-700 hover:bg-indigo-800 "
