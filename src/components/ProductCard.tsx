@@ -2,23 +2,28 @@ import type { IProduct } from "../interfaces";
 import { txtSlicer } from "../utils/function";
 import Image from "./Image";
 import Button from "./ui/Button";
+import CricleColor from "./ui/CricleColor";
 
 interface IProps {
   product: IProduct;
 }
 
 const ProductCard = ({ product }: IProps) => {
-  const { category, imageURL, title, description, price } = product;
+  const { category, imageURL, title, description, price, colors } = product;
+  /* --------- RENDER ----------- */
+  const renderProductColor = colors.map((color) => (
+    <CricleColor key={color} color={color} />
+  ));
+
   return (
     <div className=" bg-white max-w-sm md:max-w-lg mx-auto md:mx-0 border rounded-md p-2 flex flex-col shadow-sm hover:shadow-md transition  ">
       <Image imageURL={imageURL} alt={title} className="rounded-md mb-2" />
-      <h3>{title} </h3>
-      <p>{txtSlicer(description)}</p>
-      <div className="flex items-center my-4 space-x-2">
-        <span className="w-5 h-5 bg-indigo-400 rounded-full   cursor-pointer" />
-        <span className="w-5 h-5 bg-red-400 rounded-full   cursor-pointer" />
-        <span className="w-5 h-5 bg-green-400 rounded-full   cursor-pointer" />
+      <h3 className="overflow-hidden">{title} </h3>
+      <p className="overflow-hidden">{txtSlicer(description)}</p>
+      <div className="flex items-center flex-wrap  space-x-1">
+        {renderProductColor}
       </div>
+
       <div className="flex justify-between items-center border-t pt-3 mt-auto">
         <span className="text-blue-600 font-bold">${price}</span>
         <div className="flex items-center space-x-2">

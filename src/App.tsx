@@ -8,6 +8,7 @@ import type { IProduct } from "./interfaces";
 import { productValidation } from "./validation";
 import ErrorMessage from "./components/ErrorMessage";
 import CricleColor from "./components/ui/CricleColor";
+import { v4 as uuid } from "uuid";
 
 const defaultProductObject = {
   title: "",
@@ -22,6 +23,7 @@ const defaultProductObject = {
 };
 const App = () => {
   /* --------- STATE ----------- */
+  const [products, setProducts] = useState<IProduct[]>(productList);
   const [product, setProduct] = useState<IProduct>(defaultProductObject);
   const [errors, setErrors] = useState({
     title: "",
@@ -74,13 +76,19 @@ const App = () => {
       return;
     }
 
+    setProducts((prev) => [
+      { ...product, id: uuid(), colors: tempColros },
+      ...prev,
+    ]);
+    setProduct(defaultProductObject);
+    setTempColor([]);
     // console.log(hasErrorMsg);
     console.log("Send This Product to server");
   };
 
   /* --------- RENDER ----------- */
   // ** Render
-  const renderProductList = productList.map((product) => (
+  const renderProductList = products.map((product) => (
     <ProductCard key={product.id} product={product} />
   ));
 

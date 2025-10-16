@@ -5,6 +5,7 @@ interface IProps {
 }
 
 const Image = ({ imageURL, alt, className }: IProps) => {
+  if (!imageURL) return null; // لا يرسم الصورة أصلًا إذا مافيه src
   return <img src={imageURL} alt={alt} className={className} />;
 };
 
