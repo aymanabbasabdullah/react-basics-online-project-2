@@ -29,6 +29,7 @@ const App = () => {
   const [product, setProduct] = useState<IProduct>(defaultProductObject);
   const [productToEdit, setProductToEdit] =
     useState<IProduct>(defaultProductObject);
+  const [productToEditIdx, setProductToEditIdx] = useState<number>(0); //update
   const [errors, setErrors] = useState({
     title: "",
     description: "",
@@ -77,7 +78,9 @@ const App = () => {
   const onCancel = () => {
     console.log("Cancel");
     setProduct(defaultProductObject);
+
     closeModal();
+    closeEditModal();
   };
 
   const submitHandler = (event: React.FormEvent<HTMLFormElement>): void => {
@@ -97,6 +100,7 @@ const App = () => {
       return;
     }
 
+    // Add New Product
     setProducts((prev) => [
       {
         ...product,
@@ -122,38 +126,45 @@ const App = () => {
       Object.values(errors).some((value) => value === "") &&
       Object.values(errors).every((value) => value === "");
 
-    const hasNoColors = tempColros.length === 0;
-    setColorError(hasNoColors ? "Please select at least one color!" : "");
-    if (!hasErrorMsg || hasNoColors) {
+    if (!hasErrorMsg) {
       setErrors(errors);
-      openModal();
+      openEditModal();
       return;
     }
 
-    // setProducts((prev) => [
-    //   {
-    //     ...product,
-    //     id: uuid(),
-    //     colors: tempColros,
-    //     category: selectedCategory,
-    //   },
-    //   ...prev,
-    // ]);
+    //Update Product
+    // setProducts((prev) =>
+    //   prev.map((product) =>
+    //     product.id === productToEdit.id ? productToEdit : product
+    //   )
+    // );
+
+    const updatedProducts = [...products];
+    updatedProducts[productToEditIdx] = {
+      ...productToEdit,
+      colors: tempColros.concat(productToEdit.colors),
+    };
+
+    setProducts(updatedProducts);
+
+    console.log(updatedProducts);
+
     setProductToEdit(defaultProductObject);
     setTempColor([]);
-    closeModal();
-    // console.log(hasErrorMsg);
-    console.log("Send This Product to server");
+    closeEditModal();
+    console.log("Updated Product:", productToEdit);
   };
 
   /* --------- RENDER ----------- */
   // ** Render
-  const renderProductList = products.map((product) => (
+  const renderProductList = products.map((product, idx) => (
     <ProductCard
       key={product.id}
       product={product}
       setProductToEdit={setProductToEdit}
       openEditModal={openEditModal}
+      idx={idx}
+      setProductToEditIdx={setProductToEditIdx}
     />
   ));
 
@@ -186,24 +197,26 @@ const App = () => {
       key={color}
       color={color}
       onClick={() => {
-        console.log(color);
-
-        // if (tempColros.includes(color)) {
-        //   setTempColor((prev) => prev.filter((item) => item !== color));
-        //   return;
-        // }
-        // setTempColor((prev) => [...prev, color]);
+        if (tempColros.includes(color)) {
+          setTempColor((prev) => prev.filter((item) => item !== color));
+          return;
+        }
+        if (productToEdit.colors.includes(color)) {
+          setTempColor((prev) => prev.filter((item) => item !== color));
+          return;
+        }
+        setTempColor((prev) => [...prev, color]);
 
         //clean and “best-practice” 2 way
-        setTempColor((prev) => {
-          const exits = tempColros.includes(color);
-          const update = exits
-            ? prev.filter((item) => item !== color)
-            : [...prev, color];
+        // setTempColor((prev) => {
+        //   const exits = tempColros.includes(color);
+        //   const update = exits
+        //     ? prev.filter((item) => item !== color)
+        //     : [...prev, color];
 
-          if (update.length > 0) setColorError("");
-          return update;
-        });
+        //   if (update.length > 0) setColorError("");
+        //   return update;
+        // });
       }}
     />
   ));
@@ -306,21 +319,22 @@ const App = () => {
             "Product Image URL",
             "imageURL"
           )}
-          {renderProductEditWithErrorMsg("price", "Product Price",  "price")}
+          {renderProductEditWithErrorMsg("price", "Product Price", "price")}
 
           {/* 
           <Select
             selected={selectedCategory}
             setSelected={setSelectedCategory}
           /> */}
-          {/* <div className="flex items-center flex-wrap  space-x-1">
+
+          <div className="flex items-center flex-wrap  space-x-1">
             {renderProductColor}
 
             {colorError && <ErrorMessage msg={colorError} />}
           </div>
 
           <div className="flex items-center flex-wrap  space-x-1">
-            {tempColros.map((color) => (
+            {tempColros.concat(productToEdit.colors).map((color) => (
               <span
                 key={color}
                 className="p-1 rounded-md text-xs text-white mb-1 mr-1"
@@ -329,18 +343,19 @@ const App = () => {
                 {color}
               </span>
             ))}
-          </div> */}
+          </div>
 
           <div className="flex items-center  space-x-3 mt-5 ">
             <Button
               className="bg-indigo-700 hover:bg-indigo-800 "
-              onClick={closeModal}
+              type="submit"
             >
               EDIT
             </Button>
             <Button
               className="bg-gray-300 hover:bg-gray-400"
               onClick={onCancel}
+              type="submit"
             >
               Cancel
             </Button>
