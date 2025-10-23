@@ -6,15 +6,22 @@ import CricleColor from "./ui/CricleColor";
 
 interface IProps {
   product: IProduct;
+  setProductToEdit: (product: IProduct) => void;
+  openEditModal: () => void;
 }
 
-const ProductCard = ({ product }: IProps) => {
+const ProductCard = ({ product, setProductToEdit, openEditModal }: IProps) => {
   const { category, imageURL, title, description, price, colors } = product;
   /* --------- RENDER ----------- */
+
   const renderProductColor = colors.map((color) => (
     <CricleColor key={color} color={color} />
   ));
-
+  /* --------- HANDERLAR ----------- */
+  const onEdit = () => {
+    setProductToEdit(product); // print Object product
+    openEditModal();
+  };
   return (
     <div className=" bg-white max-w-sm md:max-w-lg mx-auto md:mx-0 border rounded-md p-2 flex flex-col shadow-sm hover:shadow-md transition  ">
       <Image imageURL={imageURL} alt={title} className="rounded-md mb-2" />
@@ -36,10 +43,7 @@ const ProductCard = ({ product }: IProps) => {
         </div>
       </div>
       <div className="flex justify-between items-center space-x-2 mt-5 ">
-        <Button
-          className="bg-indigo-700 "
-          onClick={() => alert("Edit button clicked")}
-        >
+        <Button className="bg-indigo-700 " onClick={onEdit}>
           Edit
         </Button>
         <Button

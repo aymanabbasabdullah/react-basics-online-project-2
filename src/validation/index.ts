@@ -47,5 +47,10 @@ export const productValidation = (product: {
   if (!product.price.trim() || isNaN(Number(product.price))) {
     errors.price = "Vaild price is required!";
   }
+
+  // if (!product.colors.trim() || product.colors.length === 0) {
+  //   errors.price = "Vaild colors is required!";
+  // }
+
   return errors;
 };

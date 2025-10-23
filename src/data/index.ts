@@ -199,7 +199,7 @@ export const categories: ICategory[] = [
   },
   {
     id: uuid(),
-    name: "T-Shirt",
+    name: "T-Shirt", 
     imageURL:
       "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80",
   },

@@ -12,6 +12,7 @@ interface IProps {
   isOpen: boolean;
   closeModal: () => void;
   title?: string;
+  
   children: React.ReactNode;
 }
 
