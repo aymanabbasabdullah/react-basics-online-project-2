@@ -11,6 +11,7 @@ import CricleColor from "./components/ui/CricleColor";
 import { v4 as uuid } from "uuid";
 import Select from "./components/ui/Select";
 import type { TProductNames } from "./types";
+import toast, { Toaster } from "react-hot-toast";
 
 const defaultProductObject = {
   title: "",
@@ -38,6 +39,7 @@ const App = () => {
   });
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
+  const [isCloseConfirmModal, setcloseConfirmModal] = useState(false);
   const [tempColros, setTempColor] = useState<string[]>([]);
   const [colorError, setColorError] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<ICategory>(
@@ -45,11 +47,14 @@ const App = () => {
   );
 
   /* --------- HANDLERS ----------- */
-
+  console.log(isCloseConfirmModal);
   const closeModal = () => setIsOpen(false);
   const openModal = () => setIsOpen(true);
   const closeEditModal = () => setIsOpenEditModal(false);
   const openEditModal = () => setIsOpenEditModal(true);
+
+  const openConfirmModal = () => setcloseConfirmModal(true);
+  const closeConfirmModal = () => setcloseConfirmModal(false);
 
   const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
@@ -115,6 +120,8 @@ const App = () => {
     setProduct(defaultProductObject);
     setTempColor([]);
     closeModal();
+    toast.success("Product Added successfully!", { duration: 2000 });
+
     // console.log(hasErrorMsg);
     console.log("Send This Product to server");
   };
@@ -154,9 +161,20 @@ const App = () => {
     setProductToEdit(defaultProductObject);
     setTempColor([]);
     closeEditModal();
+    toast.success("Product Edited successfully!", { duration: 2000 });
+
     console.log("Updated Product:", productToEdit);
   };
 
+  const removeProductHandler = () => {
+    console.log("remove", productToEdit.id);
+    const filtered = products.filter(
+      (product) => product.id !== productToEdit.id
+    );
+    setProducts(filtered);
+    closeConfirmModal();
+    toast.success("Product removed successfully!", { duration: 2000 });
+  };
   /* --------- RENDER ----------- */
   // ** Render
   const renderProductList = products.map((product, idx) => (
@@ -167,6 +185,7 @@ const App = () => {
       openEditModal={openEditModal}
       idx={idx}
       setProductToEditIdx={setProductToEditIdx}
+      onConfirmModalOpen={openConfirmModal}
     />
   ));
 
@@ -302,7 +321,6 @@ const App = () => {
           </div>
         </form>
       </Modal>
-
       {/** Edit Product Modal */}
       <Modal
         isOpen={isOpenEditModal}
@@ -364,6 +382,35 @@ const App = () => {
           </div>
         </form>
       </Modal>
+      {/** Delete Product Modal */}
+      <Modal
+        isOpen={isCloseConfirmModal}
+        closeModal={closeConfirmModal}
+        title="Are You Sure You Want to Remove This Product from your store?"
+        description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quae quia nostrum atque. Magni id laborum enim quibusdam quae. Temporibus dolore at ducimus! Laborum eos provident quidem odio incidunt fugiat dolores?"
+      >
+        <div className="flex items-center  space-x-3 mt-5 ">
+          <Button
+            className="bg-red-700 hover:bg-red-800 "
+            type="submit"
+            onClick={removeProductHandler}
+          >
+            Yes, remove
+          </Button>
+
+          <Button
+            className="bg-gray-300 hover:bg-gray-400"
+            onClick={closeConfirmModal}
+            type="submit"
+          >
+            Cancel
+          </Button>
+        </div>
+      </Modal>
+      <Toaster
+        position="bottom-right"
+        toastOptions={{ style: { background: "#000", color: "#fff" } }}
+      />
     </main>
   );
 };

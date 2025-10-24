@@ -8,6 +8,7 @@ interface IProps {
   product: IProduct;
   setProductToEdit: (product: IProduct) => void;
   openEditModal: () => void;
+  onConfirmModalOpen: () => void;
   idx: number;
   setProductToEditIdx: (value: number) => void;
 }
@@ -18,6 +19,7 @@ const ProductCard = ({
   openEditModal,
   idx,
   setProductToEditIdx,
+  onConfirmModalOpen: onConfirmModal,
 }: IProps) => {
   const { category, imageURL, title, description, price, colors } = product;
   /* --------- RENDER ----------- */
@@ -32,7 +34,8 @@ const ProductCard = ({
     setProductToEditIdx(idx); //update
   };
   const onRemove = () => {
-    
+    setProductToEdit(product); // print Object product
+    onConfirmModal();
   };
   return (
     <div className=" bg-white max-w-sm md:max-w-lg mx-auto md:mx-0 border rounded-md p-2 flex flex-col shadow-sm hover:shadow-md transition  ">
