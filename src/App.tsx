@@ -4,7 +4,7 @@ import Modal from "./components/ui/Modal";
 import { categories, colors, formInputsList, productList } from "./data";
 import Button from "./components/ui/Button";
 import Input from "./components/ui/Input";
-import type { IProduct } from "./interfaces";
+import type { ICategory, IProduct } from "./interfaces";
 import { productValidation } from "./validation";
 import ErrorMessage from "./components/ErrorMessage";
 import CricleColor from "./components/ui/CricleColor";
@@ -40,7 +40,9 @@ const App = () => {
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   const [tempColros, setTempColor] = useState<string[]>([]);
   const [colorError, setColorError] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+  const [selectedCategory, setSelectedCategory] = useState<ICategory>(
+    categories[0]
+  );
 
   /* --------- HANDLERS ----------- */
 
@@ -319,13 +321,13 @@ const App = () => {
             "Product Image URL",
             "imageURL"
           )}
-          {renderProductEditWithErrorMsg("price", "Product Price", "price")}
 
-          {/* 
           <Select
-            selected={selectedCategory}
-            setSelected={setSelectedCategory}
-          /> */}
+            selected={productToEdit.category}
+            setSelected={(value) =>
+              setProductToEdit({ ...productToEdit, category: value })
+            }
+          />
 
           <div className="flex items-center flex-wrap  space-x-1">
             {renderProductColor}

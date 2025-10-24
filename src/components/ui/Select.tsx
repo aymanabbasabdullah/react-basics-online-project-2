@@ -19,7 +19,7 @@ interface IProps {
   setSelected: (category: ICategory) => void;
 }
 const Select = ({ selected, setSelected }: IProps) => {
-  console.log(selected);
+  // console.log(selected);
   return (
     <Listbox value={selected} onChange={setSelected}>
       <Label className="block text-sm/6 font-medium text-gray-900">
