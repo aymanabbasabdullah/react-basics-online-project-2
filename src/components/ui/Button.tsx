@@ -8,7 +8,7 @@ const Button = ({ className, children, width = "w-full", ...rest }: IProps) => {
   // console.log({ rest });
   return (
     <button
-      className={`${className}  p-2 ${width} rounded-lg text-white hover:opacity-90 transition`}
+      className={`${className}  p-2 ${width} font-medium rounded-lg text-white hover:opacity-90 transition`}
       {...rest}
     >
       {children}

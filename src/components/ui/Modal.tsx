@@ -12,11 +12,17 @@ interface IProps {
   isOpen: boolean;
   closeModal: () => void;
   title?: string;
-
+  description?: string;
   children: React.ReactNode;
 }
 
-const Modal = ({ isOpen, closeModal, title, children }: IProps) => {
+const Modal = ({
+  isOpen,
+  closeModal,
+  title,
+  description,
+  children,
+}: IProps) => {
   //   const [isOpen, setIsOpen] = useState(true);
 
   //   function closeModal() {
@@ -61,6 +67,9 @@ const Modal = ({ isOpen, closeModal, title, children }: IProps) => {
                     >
                       {title}
                     </DialogTitle>
+                  )}
+                  {description && (
+                    <p className="text-sm text-gray-500 mt-3">{description}</p>
                   )}
 
                   <div className="mt-4">{children}</div>
