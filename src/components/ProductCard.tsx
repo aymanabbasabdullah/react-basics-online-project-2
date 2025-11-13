@@ -1,3 +1,4 @@
+import { memo } from "react";
 import type { IProduct } from "../interfaces";
 import { numberWithCommas, txtSlicer } from "../utils/function";
 import Image from "./Image";
@@ -73,4 +74,4 @@ const ProductCard = ({
   );
 };
 
-export default ProductCard;
+export default memo(ProductCard);
