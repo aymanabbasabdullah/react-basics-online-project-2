@@ -1,4 +1,3 @@
-"use client";
 import {
   Label,
   Listbox,
@@ -10,6 +9,7 @@ import { ChevronUpDownIcon } from "@heroicons/react/16/solid";
 import { CheckIcon } from "@heroicons/react/20/solid";
 import { categories } from "../../data";
 import type { ICategory } from "../../interfaces";
+import { memo } from "react";
 
 // function classNames(...classess: string[]) {
 //   return classess.filter(Boolean).join(" ");
@@ -72,4 +72,4 @@ const Select = ({ selected, setSelected }: IProps) => {
     </Listbox>
   );
 };
-export default Select;
+export default memo(Select);
